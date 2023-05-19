@@ -1,5 +1,5 @@
 <!-- TEMPLATE SOURCE: https://github.com/othneildrew/Best-README-Template/pull/73 -->
-
+<a name="readme-top"></a>
 <!-- PROJECT LOGO -->
 <!-- <br />
 <div align="center">
@@ -7,7 +7,7 @@
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
  -->
-  <h3 align="center">Django and DRF excercise</h3>
+  <h3 align="center">Onboarding backend exercise</h3>
 
   <p align="center">
     Basic CRUD API for creating and editing recipes
@@ -34,9 +34,13 @@
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
+	<ul>
+        	<li><a href="#get">Get</a></li>
+        	<li><a href="#post">Post</a></li>
+		<li><a href="#update">Update</a></li>
+        	<li><a href="#delete">Delete</a></li>
+      </ul>
     <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
@@ -46,89 +50,16 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
+The project is focused on managing recipes and ingredients through a CRUD REST API. Built using Python, Django REST Framework, and Docker, this API serves as a practical assessment of the skills and concepts learned throughout an online course.
 
-CRUD API with Django and DRF that allows you to CRUD recipes and add/delete ingredients to it. It can be tested it using postman or similar.
-
-Based on Udemy course... blah blah
-
-Reuested models: 
+Required models: 
 * Recipe: Name, Description
 * Ingredient: Name, Recipe (ForeignKey) ← assume a given ingredient belongs only to one recipe, even if that means multiple Ingredient instances with the exact same name.
 
-### Example recipe creation
 
- ```js
-   POST /recipes/
-{
-	"name": "Pizza",
-	"description": "Put it in the oven",
-	"ingredients": [{"name": "dough"}, {"name": "cheese"}, {"name": "tomato"}]
-}
-
-Response:
-{
-	“id”: 1,
-	“name”: “Pizza”
-	“description”: “Put it in the oven”,
-	“ingredients”: [{“name”: “dough”}, {“name”: “cheese”}, {“name”: “tomato”}]
-}
-   ```
-
-### Example recipe creation
-
- ```js
-GET /recipes/
-[
-    {
-	    “id”: 1,
-      “name”: “Pizza”
-	    “description”: “Put it in the oven”,
-	    “ingredients”: [{“name”: “dough”}, {“name”: “cheese”}, {“name”: “tomato”}]
-    }
-]
-   ```
-   
-   ### Example recipe edit
-
- ```js
-PATCH /recipes/1/
-    {
-	    "name": "Pizza",
-	    "description": "Put it in the oven",
-	    "ingredients": [{"name": "casa-tarradellas"}]
-    }
-
-
-Should delete the previous existing ingredients and put “casa-tarradellas” as only ingredient for recipe.
-
-Response:
-{
-	“id”: 1,
-	“name”: “Pizza”
-	“description”: “Put it in the oven”,
-	“ingredients”: [{“name”: “casa-tarradellas”}]
-}
-   ```
-   
-   ### Example recipe delete
-
- ```js
-DELETE /recipes/1/
-
-
-Response:
-HTTP 204 (NO CONTENT)
-
-
-Should delete the targeted recipe AND its ingredients.
-   ```
-Of course, no one template will serve all projects since your needs may be different. So I'll be adding more in the near future. You may also suggest changes by forking this repo and creating a pull request or opening an issue. Thanks to all the people have contributed to expanding this template!
-
-For more details visit[this notion page](https://www.notion.so/travelperk/Description-of-the-exercise-5db39976c0b34ff0a10ed5c84a6f7fe9)
+For more details take a look in [this notion page](https://www.notion.so/travelperk/Description-of-the-exercise-5db39976c0b34ff0a10ed5c84a6f7fe9)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 ### Built With
 
@@ -139,39 +70,73 @@ For more details visit[this notion page](https://www.notion.so/travelperk/Descri
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
-
 <!-- GETTING STARTED -->
 ## Getting Started
 
-Some intro text here
+Let's run this... thingy
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
+Having installed:
 * docker
 * docker-compose
-* and so on
 
 ### Installation
-
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
 
 1. Clone the repo
    ```sh
    git clone https://github.com/alejandra-lf/my-recipe-exercise.git
    ```
-2. Docker ... 
+   
+2. Build, start and run the app  
    ```sh
    docker-compose build
    docker-compose up
    ```
-3. ...
-
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+<!-- Usage -->
+
+## Usage
+
+Note: App should be running by now :)
 
 
+### Get
+
+In a browser, go to
+   ```
+   http://localhost:8000/recipes/
+   ```
+
+### Post
+
+In the same URL
+   ```
+   http://localhost:8000/recipes/
+   ```
+Go to the text field and  paste the following recipe. Then click on POST. Voilà!
+   
+```
+   	{
+	"name": "Cheese sandwich",
+	"description": "Just put some cheese between two slices of bread.",
+	"ingredients": [{"name": "cheese"}, {"name": "bread"}]
+	}
+   ```
+   
+### Update
+
+Under construction
+
+### Delete
+
+Under construction
+
+
+### Django-admin info..create superuser ..
+   
 <!-- ROADMAP -->
 ## Roadmap
 
@@ -191,7 +156,7 @@ _Below is an example of how you can instruct your audience on installing and set
 <!-- CONTACT -->
 ## Contact
 
-Project Link: [https://github.com/your_username/repo_name](https://github.com/alejandra-lf/my-recipe-exercise
+Project Link: [https://github.com/alejandra-lf/my-recipe-exercise](https://github.com/alejandra-lf/my-recipe-exercise)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -199,7 +164,7 @@ Project Link: [https://github.com/your_username/repo_name](https://github.com/al
 
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
-
+udemy courses, google, stackoverflow, medium, django official docs... Cthulhu!
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
