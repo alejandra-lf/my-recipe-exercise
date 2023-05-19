@@ -11,7 +11,7 @@
   <h3 align="center">Onboarding backend exercise</h3>
 
   <p align="center">
-    Basic CRUD API for creating and editing recipes
+    (very) Basic CRUD API for creating and editing recipes
   </p>
 </div>
 
