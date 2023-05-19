@@ -1,13 +1,13 @@
 # my-recipe-exercise
-<!-- TEMPLATE SOURCE: https://github.com/othneildrew/Best-README-Template/pull/73 -->
+<!-- TEMPLATE SOURCE: [https://github.com/othneildrew/Best-README-Template -->
 <a name="readme-top"></a>
 <!-- PROJECT LOGO -->
-<!-- <br />
+<br />
 <div align="center">
   <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="imgs/recipe.png" alt="Logo" width="80" height="80">
+    <img src="./imgs/recipe.png" alt="Logo" width="80" height="80">
   </a>
- -->
+
   <h3 align="center">Onboarding backend exercise</h3>
 
   <p align="center">
@@ -51,6 +51,7 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
+
 The project is focused on managing recipes and ingredients through a CRUD REST API. Built using Python, Django REST Framework, and Docker, this API serves as a practical assessment of the skills and concepts learned throughout an online course.
 
 Required models:
@@ -106,18 +107,25 @@ Note: App should be running by now :)
 
 ### Get
 
-In a browser, go to
+Just open a browser and go to:
    ```
    http://localhost:8000/recipes/
    ```
+
+Then you should see the recipes. If there's none, create one! (see Post section)
+
+![get](./imgs/get.png)
 
 ### Post
 
-In the same URL
+Ok, let's create a recipe. In the same URL
    ```
    http://localhost:8000/recipes/
    ```
-Go to the text field and  paste the following recipe. Then click on POST. Voilà!
+   
+![get](./imgs/post.png)
+
+Go to the text field and  paste the following. Then click on POST. Voilà!
 
 ```
    	{
@@ -134,7 +142,6 @@ Under construction
 ### Delete
 
 Under construction
-
 
 ### Django-admin info..create superuser ..
 
