@@ -1,12 +1,11 @@
 # my-recipe-exercise
-(Very) basic CRUD API with Django and DRF based on Udemy course
 <!-- TEMPLATE SOURCE: https://github.com/othneildrew/Best-README-Template/pull/73 -->
 <a name="readme-top"></a>
 <!-- PROJECT LOGO -->
 <!-- <br />
 <div align="center">
   <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="imgs/recipe.png" alt="Logo" width="80" height="80">
   </a>
  -->
   <h3 align="center">Onboarding backend exercise</h3>
