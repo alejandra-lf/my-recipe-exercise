@@ -122,7 +122,7 @@ Ok, let's create a recipe. In the same URL
    ```
    http://localhost:8000/recipes/
    ```
-   
+
 ![get](./imgs/post.png)
 
 Go to the text field and  paste the following. Then click on POST. Voilà!
@@ -153,9 +153,19 @@ Under construction
 - [x] Create models
 - [x] Create serializers, views and urls
 - [x] Create GET and POST recipes with ingredients
-- [ ] UPDATE and DELETE features
-- [ ] Search by name
-- [ ] A lot of tests!!
+- [x] Test for Create recipe
+- [x] UPDATE and DELETE features
+- [x] Tests for update and delete
+- [x] Search by name
+
+-----------------------
+
+**May 23rd Update**
+Adapt the current code to TK's way
+- [ ] Use ViewSet instead of ModelViewSet
+- [ ] Add service method for querying DB
+- [ ] Add API to transform the data into a DTO
+- [ ] Test accordingly :)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
