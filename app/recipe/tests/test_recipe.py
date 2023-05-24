@@ -63,6 +63,7 @@ class RecipeTests(TestCase):
 
         # Checking
         self.assertEqual(response.status_code, 200) # successful request
+        # / ----assert response.status_code
         self.assertEqual(recipe.ingredients.count(), 1)
         self.assertEqual(recipe.ingredients.first().name, "casa tarradellas")
 
@@ -85,4 +86,5 @@ class RecipeTests(TestCase):
         self.assertEqual(response.status_code, 204)
         # Would be better to import status and do
         # self.assertEqual (response.status_code, status.HTTP_204_NO_CONTENT) ?
+        #/--- assert Recipe.objects.filter(name="Pizza").exists() is False
 
