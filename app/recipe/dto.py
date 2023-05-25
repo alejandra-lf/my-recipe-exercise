@@ -7,15 +7,13 @@ class IngredientDto(BaseModel):
     name: str
 
 
-
-
 class RecipeDto(BaseModel):
     name: str
     description: str
-    #ingredients: List[IngredientDto]
-    ingredients: Optional[List[IngredientDto]]
+    ingredients: List[IngredientDto]
+    #ingredients: Optional[List[IngredientDto]]
 
-    class Config:
-        orm_mode = True
+    # class Config:
+    #     orm_mode = True
 
 # dto example: RequestUserDto  from dto.py
