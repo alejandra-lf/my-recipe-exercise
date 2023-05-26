@@ -8,6 +8,7 @@ class IngredientDto(BaseModel):
 
 
 class RecipeDto(BaseModel):
+    id: int
     name: str
     description: str
     ingredients: List[IngredientDto]

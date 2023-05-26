@@ -45,7 +45,7 @@ class RecipeViewSet(ViewSet):
             serializer = RecipeSerializer(recipe)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except:
-            return Response({"detail": "Recipe not found."}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"message": "Recipe not found."}, status=status.HTTP_404_NOT_FOUND)
 
 
     def update(self, request, pk=None):
@@ -55,4 +55,12 @@ class RecipeViewSet(ViewSet):
         pass
 
     def destroy(self, request, pk=None):
-        pass
+        try:
+            RecipeService.delete_recipe(pk)
+            return Response({"message": "Recipe deleted."}, status=status.HTTP_204_NO_CONTENT) # {"detail": "Recipe deleted."}
+        except:
+            # asuming that the pk doesn't exsit. Should be more specific handling the corresponding error
+            return Response({"message": "Recipe not found."}, status=status.HTTP_404_NOT_FOUND)
+
+
+

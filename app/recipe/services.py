@@ -1,14 +1,16 @@
-"""
-Similar to
-def get_users_by_cost_center_id  (line 452)
-from services.py
-"""
 
 from .models import Recipe, Ingredient
 from .dto import RecipeDto, IngredientDto
 
 
 class RecipeService:
+    # Tk backend ref: services.py - get_users_by_cost_center_id  (line 452)
+    @staticmethod
+    def _get_ingredients(recipe_pk):
+        ingredients = Ingredient.objects.filter(recipe=recipe_pk)
+        ingredients_dtos = [IngredientDto(
+            name=ingredient.name) for ingredient in ingredients]
+        return ingredients_dtos
 
     @staticmethod
     def get_all_recipes():
@@ -23,6 +25,7 @@ class RecipeService:
 
             recipe_dtos.append(
                 RecipeDto(
+                    id=recipe.id,
                     name=recipe.name,
                     description=recipe.description,
                     ingredients=ingredients_dtos
@@ -33,20 +36,20 @@ class RecipeService:
 
     @staticmethod
     def get_recipe(recipe_pk):
+        # ingredients=Ingredient.objects.filter(recipe=recipe.pk)
+        # ingredients_dtos=[IngredientDto(name=ingredient.name) for ingredient in ingredients]
         recipe = Recipe.objects.get(pk=recipe_pk)
         ingredients_dtos = RecipeService._get_ingredients(recipe_pk)
 
-        # ingredients=Ingredient.objects.filter(recipe=recipe.pk)
-        # ingredients_dtos=[IngredientDto(name=ingredient.name) for ingredient in ingredients]
-
         return RecipeDto(
+            id=recipe.id,
             name=recipe.name,
             description=recipe.description,
-            ingredients=ingredients_dtos)
+            ingredients=ingredients_dtos
+            )
 
     @staticmethod
-    def _get_ingredients(recipe_pk):
-        ingredients = Ingredient.objects.filter(recipe=recipe_pk)
-        ingredients_dtos = [IngredientDto(
-            name=ingredient.name) for ingredient in ingredients]
-        return ingredients_dtos
+    def delete_recipe(recipe_pk):
+        recipe = Recipe.objects.get(pk=recipe_pk)
+        # or call get_recipe instead? but then i'll get a dto as return hmm nope, nope
+        recipe.delete()
