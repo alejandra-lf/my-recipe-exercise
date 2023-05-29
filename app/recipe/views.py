@@ -29,15 +29,18 @@ class RecipeViewSet(ViewSet):
 
 
     def create(self, request):
-        pass
+        serializer = RecipeSerializer(data=request.data)
+        if serializer.is_valid():
+            # recipe = RecipeService.create_recipe(serializer.validated_data) # currently no need of having the recipe...
+            RecipeService.create_recipe(serializer.validated_data)
+            return Response(status=status.HTTP_201_CREATED) #serializer.data,
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def retrieve(self, request, pk=None):
         # only serializer
         # recipe = get_object_or_404(Recipe.objects.filter(pk=pk))
         # serializer = RecipeSerializer(recipe)
         # return Response(serializer.data, status=status.HTTP_200_OK)
-
-
         try:
             # e.g. aliasviewsets.py line 20
             # dto and services
@@ -47,20 +50,38 @@ class RecipeViewSet(ViewSet):
         except:
             return Response({"message": "Recipe not found."}, status=status.HTTP_404_NOT_FOUND)
 
-
+    # put
     def update(self, request, pk=None):
-        pass
+        return RecipeViewSet._put_and_patch(pk, RecipeSerializer(data=request.data))
+        # serializer = RecipeSerializer(data=request.data)
+        # if serializer.is_valid():
+        #     RecipeService.update_recipe(pk, serializer.validated_data)
+        #     return Response("Recipe updated successfully.", status=status.HTTP_201_CREATED)
+        # return Response("Failed to update recipe.", status=status.HTTP_400_BAD_REQUEST)
 
+    # patch
     def partial_update(self, request, pk=None):
-        pass
+        return RecipeViewSet._put_and_patch(pk, RecipeSerializer(data=request.data, partial=True))
+        # serializer = RecipeSerializer(data=request.data, partial=True)
+        # if serializer.is_valid():
+        #     RecipeService.update_recipe(pk, serializer.validated_data)
+        #     return Response("Recipe updated successfully.", status=status.HTTP_201_CREATED)
+        # return Response("Failed to update recipe.", status=status.HTTP_400_BAD_REQUEST)
+
+    def _put_and_patch(pk,serializer):
+        print(serializer)
+        if serializer.is_valid():
+            RecipeService.update_recipe(pk, serializer.validated_data)
+            return Response("Recipe updated successfully.", status=status.HTTP_201_CREATED)
+        return Response("Failed to update recipe.", status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, pk=None):
         try:
             RecipeService.delete_recipe(pk)
-            return Response({"message": "Recipe deleted."}, status=status.HTTP_204_NO_CONTENT) # {"detail": "Recipe deleted."}
+            return Response("Recipe deleted successfully", status=status.HTTP_204_NO_CONTENT) # {"detail": "Recipe deleted."}
         except:
             # asuming that the pk doesn't exsit. Should be more specific handling the corresponding error
-            return Response({"message": "Recipe not found."}, status=status.HTTP_404_NOT_FOUND)
+            return Response("Recipe not found.", status=status.HTTP_404_NOT_FOUND)
 
 
 
