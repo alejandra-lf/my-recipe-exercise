@@ -59,7 +59,6 @@ class RecipeService:
 
         if ingredients_data is not None:
             for ingredient_data in ingredients_data:
-                print('hi from if ingredinet')
                 Ingredient.objects.create(recipe=recipe, **ingredient_data)
 
         recipe_dto = RecipeService.get_recipe(recipe.pk)
