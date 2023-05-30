@@ -9,46 +9,40 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 from django.shortcuts import get_object_or_404
 from .serializers import RecipeSerializer
-from .models import Recipe
 from .services import RecipeService
+from .models import Recipe
+
 
 
 class RecipeViewSet(ViewSet):
 
     def list(self, request):
-        # Using serializer (not DTO)
-        # queryset = Recipe.objects.all()
-        # serializer = RecipeSerializer(queryset, many=True)
-        # return Response(serializer.data, status=status.HTTP_200_OK)
+        try:
+            recipes_dto = RecipeService.get_all_recipes()
+            recipes_dict = [recipe_dto.dict() for recipe_dto in recipes_dto]
+            return Response(data=recipes_dict, status=status.HTTP_200_OK)
+        except:
+            # serializer = RecipeSerializer(recipes, many=True)
+            # return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response("No recipes to show", status=status.HTTP_404_NOT_FOUND)
 
-        # Using DTO... now working!!
-        recipes = RecipeService.get_all_recipes()
-        serializer = RecipeSerializer(recipes, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-        # better to include the status. Examples in users/viewsets/userviewset/userviewset.py
 
+    def retrieve(self, request, pk=None):
+        try:
+            # e.g. aliasviewsets.py line 20
+            recipe_dto = RecipeService.get_recipe(pk)
+            return Response(data=recipe_dto.dict(), status=status.HTTP_200_OK)
+            # serializer = RecipeSerializer(recipe)
+            # return Response(serializer.data, status=status.HTTP_200_OK)
+        except:
+            return Response("Recipe not found.", status=status.HTTP_404_NOT_FOUND)
 
     def create(self, request):
         serializer = RecipeSerializer(data=request.data)
         if serializer.is_valid():
-            # recipe = RecipeService.create_recipe(serializer.validated_data) # currently no need of having the recipe...
-            RecipeService.create_recipe(serializer.validated_data)
-            return Response(status=status.HTTP_201_CREATED) #serializer.data,
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def retrieve(self, request, pk=None):
-        # only serializer
-        # recipe = get_object_or_404(Recipe.objects.filter(pk=pk))
-        # serializer = RecipeSerializer(recipe)
-        # return Response(serializer.data, status=status.HTTP_200_OK)
-        try:
-            # e.g. aliasviewsets.py line 20
-            # dto and services
-            recipe = RecipeService.get_recipe(pk)
-            serializer = RecipeSerializer(recipe)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except:
-            return Response({"message": "Recipe not found."}, status=status.HTTP_404_NOT_FOUND)
+            recipe_dto = RecipeService.create_recipe(serializer.validated_data)
+            return Response(data=recipe_dto.dict(), status=status.HTTP_201_CREATED)
+        return Response("Recipe not created.", status=status.HTTP_400_BAD_REQUEST)
 
     # put
     def update(self, request, pk=None):
@@ -68,20 +62,16 @@ class RecipeViewSet(ViewSet):
         #     return Response("Recipe updated successfully.", status=status.HTTP_201_CREATED)
         # return Response("Failed to update recipe.", status=status.HTTP_400_BAD_REQUEST)
 
-    def _put_and_patch(pk,serializer):
-        print(serializer)
+    def _put_and_patch(pk, serializer):
         if serializer.is_valid():
-            RecipeService.update_recipe(pk, serializer.validated_data)
-            return Response("Recipe updated successfully.", status=status.HTTP_201_CREATED)
+            recipe_dto = RecipeService.update_recipe(
+                pk, serializer.validated_data)
+            return Response(data=recipe_dto.dict(), status=status.HTTP_201_CREATED)
         return Response("Failed to update recipe.", status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, pk=None):
         try:
             RecipeService.delete_recipe(pk)
-            return Response("Recipe deleted successfully", status=status.HTTP_204_NO_CONTENT) # {"detail": "Recipe deleted."}
+            return Response("Recipe successfully deleted", status=status.HTTP_204_NO_CONTENT)
         except:
-            # asuming that the pk doesn't exsit. Should be more specific handling the corresponding error
             return Response("Recipe not found.", status=status.HTTP_404_NOT_FOUND)
-
-
-

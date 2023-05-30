@@ -11,8 +11,8 @@ class RecipeDto(BaseModel):
     id: int
     name: str
     description: str
-    ingredients: List[IngredientDto]
-    #ingredients: Optional[List[IngredientDto]]
+    #ingredients: List[IngredientDto]
+    ingredients: Optional[List[IngredientDto]]
 
     # class Config:
     #     orm_mode = True

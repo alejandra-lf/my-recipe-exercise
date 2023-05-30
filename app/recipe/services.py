@@ -49,18 +49,22 @@ class RecipeService:
 
     @staticmethod
     def delete_recipe(recipe_pk):
-        recipe = Recipe.objects.get(pk=recipe_pk)
-        # or call get_recipe instead? but then i'll get a dto as return hmm nope, nope
+        recipe = Recipe.objects.get(pk=recipe_pk)  # or call get_recipe instead? nah!
         recipe.delete()
 
     @staticmethod
-    # and  the use of DTO???
     def create_recipe(validated_data):
-        ingredients_data = validated_data.pop('ingredients')
+        ingredients_data = validated_data.pop('ingredients', None)
         recipe = Recipe.objects.create(**validated_data)
-        for ingredient_data in ingredients_data:
-            Ingredient.objects.create(recipe=recipe, **ingredient_data)
-        # return recipe # currently no need of returning recipe
+
+        if ingredients_data is not None:
+            for ingredient_data in ingredients_data:
+                print('hi from if ingredinet')
+                Ingredient.objects.create(recipe=recipe, **ingredient_data)
+
+        recipe_dto = RecipeService.get_recipe(recipe.pk)
+
+        return recipe_dto
 
     @staticmethod
     def update_recipe(recipe_pk, validated_data):
@@ -74,5 +78,8 @@ class RecipeService:
 
         for attr, value in validated_data.items():
             setattr(recipe, attr, value)
-        recipe.save()
 
+        recipe.save()
+        recipe_dto = RecipeService.get_recipe(recipe_pk)
+
+        return recipe_dto
