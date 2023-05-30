@@ -162,10 +162,10 @@ Under construction
 
 **May 23rd Update**
 Adapt the current code to TK's way
-- [ ] Use ViewSet instead of ModelViewSet
-- [ ] Add service method for querying DB
-- [ ] Add API to transform the data into a DTO
-- [ ] Test accordingly :)
+- [x] Use ViewSet instead of ModelViewSet
+- [x] Add service method for querying DB
+- [x] Add API to transform the data into a DTO
+- [x] Test accordingly :)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
