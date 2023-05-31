@@ -3,12 +3,13 @@ URL mappings for the recipe API.
 """
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import RecipeViewSet #RecipeViewSet, IngredientViewSet,
+from .views import RecipeViewSet
 
 
-# Create a router and register the RecipeAPIView as a viewset
+# Create a router and register the RecipeViewSet as a viewset
 router = DefaultRouter()
-router.register('recipes', RecipeViewSet)
+#router.register('recipes', RecipeViewSet)
+router.register('recipes', RecipeViewSet, basename='recipe')
 
 urlpatterns = [
     path('', include(router.urls)),

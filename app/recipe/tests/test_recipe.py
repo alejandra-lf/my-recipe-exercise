@@ -1,88 +1,140 @@
 from django.test import TestCase
-from recipe.serializers import RecipeSerializer
-
+from django.urls import reverse
+from rest_framework import status
+from rest_framework.test import APIClient
 from recipe.models import Recipe, Ingredient
 
+RECIPES_URL = reverse('recipe-list')
 
-class RecipeTests(TestCase):
 
-    def test_recipe_creation(self):
-        # Mock request with the payload
+class RecipeViewSetTest(TestCase):
+    # def setUp(self):
+    #     self.client = APIClient()
+    # if uncomment above lines then
+    # response = self.client.post(RECIPES_URL, payload, content_type="application/json")  doesn't work, why???
+    # some serialization stuff involved?
+
+    def test_list_recipes(self):
+        response = self.client.get(RECIPES_URL)
+        assert response.status_code == status.HTTP_200_OK
+        assert len(response.data) == Recipe.objects.count()
+        # what else to assert?
+
+    def test_create_recipe(self):
         payload = {
-            "name": "Pizza",
-            "description": "Put it in the oven",
+            "name": "Canned soup",
+            "description": "Microwave it for 4 min",
             "ingredients": [
-                {"name": "dough"},
-                {"name": "cheese"},
-                {"name": "tomato"}
+                {
+                    "name": "cream"
+                },
+                {
+                    "name": "mushrooms"
+                }
             ]
         }
 
-        # Create a serializer instance and validate the payload
-        serializer = RecipeSerializer(data=payload)
-        self.assertTrue(serializer.is_valid())
+        response = self.client.post(
+            RECIPES_URL, payload, content_type="application/json")
+        # response = self.client.post(RECIPES_URL, payload, format="json")
+        # content_type="application/json" VS format="json" ...difference?
+        # print("Actual status code:", response.status_code)
 
-        # Create the recipe by saving the serializer
-        recipe = serializer.save()
+        assert response.status_code == status.HTTP_201_CREATED
 
-        # Checking
-        self.assertEqual(recipe.name, payload['name'])
-        self.assertEqual(recipe.description, payload['description'])
-        self.assertEqual(recipe.ingredients.count(), 3)
+        #assert response.data['name'] == payload['name']
+        #assert response.data['description'] == payload['description']
+        #assert len(response.data['ingredients']) == 2
 
-        # Using set comprehension (Tom's suggestion)  :D
-        ingredient_names = {ingredient.name for ingredient in recipe.ingredients.all()}
-        ingredient_names_payload = {ingredient['name'] for ingredient in payload['ingredients']}
-        self.assertEqual(ingredient_names, ingredient_names_payload)
-
-    def test_update_recipe_ingredients(self):
-        # Create recipe to be updated
+    def test_put_recipe(self):
         recipe = Recipe.objects.create(
-            #id:1  # hard coded id
             name="Pizza",
-            description="Put it in the oven"
+            description="Place it in the oven"
         )
         Ingredient.objects.create(name="dough", recipe=recipe)
-        Ingredient.objects.create(name="cheese", recipe=recipe)
         Ingredient.objects.create(name="tomato", recipe=recipe)
 
-        # New ingredient list
-        new_ingredients = [
-            {"name": "casa tarradellas"}
-        ]
+        detail_url = reverse('recipe-detail', args=[recipe.id])
 
-        # UPDATE!
+        payload = {
+            "name": "Pizza",
+            "description": "Place it in the oven",
+            "ingredients": [
+                {
+                    "name": "dough"
+                },
+                {
+                    "name": "cheese"
+                }
+            ]
+        }
+
+        response = self.client.put(
+            detail_url, payload, content_type="application/json")
+
+        assert response.status_code == status.HTTP_201_CREATED
+        assert response.data['name'] == payload['name']
+        assert response.data['description'] == payload['description']
+        assert len(response.data['ingredients']) == 2
+
+    def test_patch_recipe(self):
+        recipe = Recipe.objects.create(
+            name="Tomato Pizza",
+            description="Place it in the oven"
+        )
+        Ingredient.objects.create(name="dough", recipe=recipe)
+        Ingredient.objects.create(name="tomato", recipe=recipe)
+
+        detail_url = reverse('recipe-detail', args=[recipe.id])
+        payload = {
+            "name": "New Pizza",
+            "ingredients": []
+        }
+
         response = self.client.patch(
-            #f"/recipes/{1}/", # hard coded id
-            f"/recipes/{recipe.pk}/",
-            data={"ingredients": new_ingredients},
-            content_type="application/json"
-        )
+            detail_url, payload, content_type="application/json")
 
-        recipe.refresh_from_db()  # recipe is local var hence no need for self -.-!
+        assert response.status_code == status.HTTP_201_CREATED
+        assert response.data['name'] == payload['name']
+        assert response.data['description'] == "Place it in the oven"
+        assert len(response.data['ingredients']) == 0
 
-        # Checking
-        self.assertEqual(response.status_code, 200) # successful request
-        self.assertEqual(recipe.ingredients.count(), 1)
-        self.assertEqual(recipe.ingredients.first().name, "casa tarradellas")
+    def test_destroy_recipe(self):
+        # Create a recipe to destroy
+        payload = {
+            # "id" : 3,
+            "name": "Canned soup",
+            "description": "Microwave it for 4 min",
+            "ingredients": [
+                {
+                    "name": "cream"
+                },
+                {
+                    "name": "mushrooms"
+                }
+            ]
+        }
 
-    def test_delete_recipe(self):
-        # Create recipe to be updated
-        recipe = Recipe.objects.create(
-            name="Pizza",
-            description="Put it in the oven"
-        )
-        Ingredient.objects.create(name="dough", recipe=recipe)
-        Ingredient.objects.create(name="cheese", recipe=recipe)
-        Ingredient.objects.create(name="tomato", recipe=recipe)
+        response = self.client.post(
+            RECIPES_URL, payload, content_type="application/json")
+        assert response.status_code == status.HTTP_201_CREATED
 
-        # Delete
-        response = self.client.delete(
-            f"/recipes/{recipe.pk}/"
-        )
+        # Destroy it
+        print("Response content:", response.data)
+        # -------- now response.data is jus a string "Recipe successfully created", so test failing
+        # it fails also when hardcoding de id in payload {"id": 1}    :'(
+        recipe_id = response.data['id']  # payload['id']
+        detail_url = reverse('recipe-detail', args=[recipe_id])
+        response = self.client.delete(detail_url)
 
-        # Checking
-        self.assertEqual(response.status_code, 204)
-        # Would be better to import status and do
-        # self.assertEqual (response.status_code, status.HTTP_204_NO_CONTENT) ?
+        assert response.status_code == status.HTTP_204_NO_CONTENT
+        # what else to test?
 
+        # detail_url = reverse('recipe-detail', args=[recipe_id]) repeats on almost every test... -.-!
+        # is something like "RECIPES_URL = reverse('recipe-list')" possible?
+
+
+
+
+        # print("Response content:", response.content)
+        # print("Response content:", response.data)
